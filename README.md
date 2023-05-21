@@ -2,7 +2,7 @@
 A simple, web based, storage for your online accounts. Store username, password, URL and notes.
 
 ## Screenshot
-![Screenshot 2023-05-21 215714](https://github.com/lorenzocampanile/simple-account-storage/assets/17176752/270a6843-f1a2-40b9-9d0f-67609f9adb4c)
+![Screenshot 2023-05-21 220129](https://github.com/lorenzocampanile/simple-account-storage/assets/17176752/26806b3e-70c5-4e4f-ae71-830f2a073e9f)
 
 ## Installation
 1. Clone this project: `git clone https://github.com/lorenzocampanile/simple-account-storage.git`
