@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load accountstorage_extras %}
 
 {% block content %}
     <div class="p-4">
@@ -28,7 +29,7 @@
                         <button class="data-copy-btn btn bg-green-400 text-white tooltip" data-copy="{{ account.username }}" data-tooltip="Click to copy">Copy username</button>
                     {% endif %}
                     {% if account.password %}
-                        <button class="data-copy-btn btn bg-gray-600 text-white tooltip" data-copy="{{ account.password }}" data-tooltip="Click to copy">Copy password</button>
+                        <button class="data-copy-btn btn bg-gray-600 text-white tooltip" data-copy="{{ account.password|decrypt }}" data-tooltip="Click to copy">Copy password</button>
                     {% endif %}
                     {% if account.web.link %}
                         <a class="btn btn-link btn" href="{{ account.web.link }}" target="_blank">Go to website</a>
