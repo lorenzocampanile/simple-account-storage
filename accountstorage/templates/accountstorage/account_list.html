@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="p-4">
+        <h3>Accounts list</h3>
+
+        {% for account in object_list %}
+            <div class="card">
+                <div class="card__header">
+                    <p>
+                    </p>
+                    <p class="font-bold px-3">
+                        {% if account.web %}
+                            <i class="fa fa-solid fa-globe"></i> -
+                        {% endif %}
+                        {% if account.ssh %}
+                            <i class="fa fa-solid fa-server"></i> -
+                        {% endif %}
+                        {% if account.db %}
+                            <i class="fa fa-solid fa-database"></i> -
+                        {% endif %}
+                        {{ account.label }}
+                    </p>
+                    {% if account.notes %}<p>{{ account.notes }}</p>{% endif %}
+                </div>
+                <div class="card__action-bar u-right">
+                    {% if account.username %}
+                        <button class="data-copy-btn btn bg-green-400 text-white tooltip" data-copy="{{ account.username }}" data-tooltip="Click to copy">Copy username</button>
+                    {% endif %}
+                    {% if account.password %}
+                        <button class="data-copy-btn btn bg-gray-600 text-white tooltip" data-copy="{{ account.password }}" data-tooltip="Click to copy">Copy password</button>
+                    {% endif %}
+                    {% if account.web.link %}
+                        <a class="btn btn-link btn" href="{{ account.web.link }}" target="_blank">Go to website</a>
+                    {% endif %}
+                    {% if account.ssh.link %}
+                        <button class="data-copy-btn btn bg-indigo-600 text-white tooltip" data-copy="{{ account.ssh.link }}" data-tooltip="Click to copy">Copy ssh link</button>
+                    {% endif %}
+                    {% if account.db.host %}
+                        <button class="data-copy-btn btn bg-teal-600 text-white tooltip" data-copy="{{ account.db.host }}" data-tooltip="Click to copy">Copy database host</button>
+                    {% endif %}
+                    <small class="text-gray-500">Created at: {{ account.created_at }}</small>
+                </div>
+            </div>
+        {% empty %}
+            <h4>No accounts yet.</h4>
+        {% endfor %}
+    </div>
+
+    <script type="text/javascript">
+        let dataCopyButtons = document.querySelectorAll('.data-copy-btn');
+        for (let button of dataCopyButtons) {
+            button.addEventListener('click', () => {
+                let textToCopy = button.getAttribute('data-copy');
+                navigator.clipboard.writeText(textToCopy);
+                button.setAttribute('data-tooltip', 'Copied!');
+            })
+        }
+        console.log(dataCopyButtons);
+    </script>
+{% endblock %}
