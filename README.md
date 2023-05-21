@@ -1,5 +1,5 @@
 # simple-account-storage
-A simple, web based, storage for your online accounts. Store username, password, URL, notes and more. Siutable also for storing your databases and SSH servers credentials.
+A simple, web based, storage for your online accounts. Store username, password, URL, notes and more. Suitable also for storing your databases and SSH servers credentials.
 
 ## Screenshot
 ![Screenshot 2023-05-21 220129](https://github.com/lorenzocampanile/simple-account-storage/assets/17176752/26806b3e-70c5-4e4f-ae71-830f2a073e9f)
