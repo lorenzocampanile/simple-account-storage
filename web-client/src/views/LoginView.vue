@@ -66,6 +66,6 @@ async function performLogin(event) {
 
 <style scoped>
 .card__image {
-  background-image: url('/src/assets/images/login.jpg');
+  background-image: url('/images/login.jpg');
 }
 </style>
