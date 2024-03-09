@@ -1,6 +1,8 @@
 export const STATUS_CODES = {
   OK: 200,
+  OK_CREATED: 201,
   UNAUTHENTICATED: 401,
+  PAYLOAD_ERROR: 400,
 }
 
 export async function getCsrfToken() {
