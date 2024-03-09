@@ -161,3 +161,6 @@ cython_debug/
 
 # Configuration file
 simpleaccountstorage.conf
+
+# TODO file
+todo.txt
