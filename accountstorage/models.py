@@ -12,6 +12,14 @@ LINK_MAX_LENGHT = 2048
 
 class Account(models.Model):
     """An account stored in the system."""
+    WEB = "web"
+    SSH = "ssh"
+    DATABASE = "database"
+    ACCOUNT_TYPE_CHOICES = [
+        (WEB, "Web portal"),
+        (SSH, "SSH Server"),
+        (DATABASE, "Database"),
+    ]
 
     # The User who owns the account
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -23,6 +31,12 @@ class Account(models.Model):
 
     # The encrypted account password
     password = models.CharField(max_length=PASSWORD_MAX_LENGHT)
+
+    # The account type
+    type = models.CharField(
+        max_length=COMMON_MAX_LENGTH,
+        choices=ACCOUNT_TYPE_CHOICES,
+    )
 
     # Generic informations
     created_at = models.DateTimeField(auto_now_add=True)
