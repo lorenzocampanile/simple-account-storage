@@ -33,6 +33,9 @@ SECRET_KEY = config['SECRET_KEY']
 # Key used for encrypt/decrypt accounts passwords
 ENCRYPTION_KEY = config['ENCRYPTION_KEY']
 
+# Salt used for the encrypt/decrypt key
+ENCRYPTION_KEY_SALT = config['ENCRYPTION_KEY_SALT']
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config.getboolean('DEBUG')
 
@@ -59,7 +62,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # 3rd party apps
-    "corsheaders",
+    'rest_framework',
+    'corsheaders',
 
     # Project apps
     'authentication.apps.AuthenticationConfig',
