@@ -1,13 +1,22 @@
 <script setup>
 import { ref } from 'vue';
 import { login } from '@/composables/login';
+import { STATUS_CODES } from '@/composables/httpreq';
+import router from '@/router';
 
 const username = ref('');
 const password = ref('');
+const authenticationError = ref('');
 
 async function performLogin(event) {
-  await login(username.value, password.value);
-  console.log('*** res', sessionStorage.getItem('encryptionKey'));
+  let loginResponse = await login(username.value, password.value);
+
+  if (loginResponse.status === STATUS_CODES.OK) {
+    authenticationError.value = '';
+    router.push({ path: '/' });
+  }
+
+  authenticationError.value = 'Invalid username or password.';
 }
 </script>
 
@@ -26,19 +35,26 @@ async function performLogin(event) {
                   <p class="title">Sign in</p><span class="subtitle">Insert username and password</span>
                 </div>
               </div>
-              <div class="content">
-                <div class="row u-gap-2 mt-3">
-                  <div class="col-12">
-                    <input v-model="username" type="text" placeholder="Username" />
-                  </div>
-                  <div class="col-12">
-                    <input v-model="password" type="password" placeholder="Password" />
+              <form @submit.prevent="performLogin">
+                <div class="content">
+                  <div class="row u-gap-2 mt-3">
+                    <div v-if="authenticationError" class="col-12">
+                      <div class="toast toast--danger" style="width: auto;">
+                        <p>{{ authenticationError }}</p>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <input v-model="username" type="text" placeholder="Username" />
+                    </div>
+                    <div class="col-12">
+                      <input v-model="password" type="password" placeholder="Password" />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="card__action-bar u-center">
-                <button class="btn-link" @click="performLogin">Sign in</button>
-              </div>
+                <div class="card__action-bar u-center">
+                  <button type="submit">Sign in</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -49,7 +65,7 @@ async function performLogin(event) {
 </template>
 
 <style scoped>
-  .card__image {
-    background-image: url('/src/assets/images/login.jpg');
-  }
+.card__image {
+  background-image: url('/src/assets/images/login.jpg');
+}
 </style>

@@ -1,3 +1,8 @@
+export const STATUS_CODES = {
+  OK: 200,
+  UNAUTHENTICATED: 401,
+}
+
 export async function getCsrfToken() {
   let name = 'csrftoken';
   let cookieValue = null;
