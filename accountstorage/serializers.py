@@ -32,8 +32,6 @@ class AccountSerializer(serializers.ModelSerializer):
         'database': DatabaseAccount,
     }
 
-    encryption_key = serializers.CharField(write_only=True)
-
     web = WebAccountSerializer(required=False)
     ssh = SSHAccountSerializer(required=False)
     db = DatabaseAccountSerializer(required=False)
@@ -42,7 +40,7 @@ class AccountSerializer(serializers.ModelSerializer):
         model = Account
         fields = [
             'id', 'label', 'username', 'password', 'notes', 'type',
-            'created_at', 'updated_at', 'web', 'ssh', 'db', 'encryption_key',
+            'created_at', 'updated_at', 'web', 'ssh', 'db',
         ]
 
     def create(self, validated_data):
@@ -51,7 +49,7 @@ class AccountSerializer(serializers.ModelSerializer):
         type_data = validated_data.pop(account_type)
 
         # Extract the encryption key and encrypt the password
-        encryption_key = validated_data.pop('encryption_key')
+        encryption_key = self.context['request'].META['HTTP_X_ENCRYPTION_KEY']
         plain_text_password = validated_data.pop('password')
         encrypted_password = encrypt_password(plain_text_password, encryption_key)
         validated_data['password'] = encrypted_password
@@ -87,7 +85,7 @@ class AccountSerializer(serializers.ModelSerializer):
         # If a new password has been specified, encrypt and save the new password
         new_password = validated_data.pop('password', '')
         if new_password:
-            encryption_key = validated_data.pop('encryption_key')
+            encryption_key = self.context['request'].META['HTTP_X_ENCRYPTION_KEY']
             encrypted_password = encrypt_password(new_password, encryption_key)
             instance.password = encrypted_password
 
