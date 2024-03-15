@@ -31,6 +31,7 @@ export async function sendHttpReq(method, url, params, contentType = 'applicatio
   let headers = {
     'Content-Type': contentType,
     'X-CSRFToken': await getCsrfToken(),
+    'X-Encryption-Key': sessionStorage.getItem('encryptionKey'),
   }
 
   let reqBody = '';
@@ -46,10 +47,12 @@ export async function sendHttpReq(method, url, params, contentType = 'applicatio
     }
   }
 
-  return await fetch(`${import.meta.env.VITE_BASE_API_URL}${url}`, {
+  let reqParams = {
     method: method,
     headers: headers,
-    body: reqBody,
     credentials: "include"
-  });
+  };
+  if (method.toUpperCase() !== 'GET')
+    reqParams['body'] = reqBody;
+  return await fetch(`${import.meta.env.VITE_BASE_API_URL}${url}`, reqParams);
 }
