@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
-import authenticated from '@/middlewares/authenticated'
-import AddAccountView from '@/views/AddAccountView.vue'
+import AddEditAccountView from '@/views/AddEditAccountView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,8 +24,13 @@ const router = createRouter({
     {
       path: '/add',
       name: 'addAccount',
-      component: AddAccountView,
-    }
+      component: AddEditAccountView,
+    },
+    {
+      path: '/edit/:id',
+      name: 'editAccount',
+      component: AddEditAccountView,
+    },
     // {
     //   path: '/about',
     //   name: 'about',

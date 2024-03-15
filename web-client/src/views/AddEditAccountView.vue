@@ -1,6 +1,8 @@
 <script setup>
 import { STATUS_CODES, sendHttpReq } from '@/composables/httpreq';
-import { ref } from 'vue';
+import router from '@/router';
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 const ACCOUNT_TYPES = {
   WEB_PORTAL: 'web',
@@ -8,12 +10,12 @@ const ACCOUNT_TYPES = {
   DATABASE: 'database',
 }
 
-
 const successMessage = ref('');
 const fieldErrorMessages = ref({});
 
 const accountLabel = ref('');
 const accountUsername = ref('');
+const showPassword = ref(false);
 const accountPassword = ref('');
 const accountNotes = ref('');
 const accountType = ref('');
@@ -21,6 +23,37 @@ const accountWebLink = ref('');
 const accountSshLink = ref('');
 const accountDatabaseHost = ref('');
 const accountDatabaseType = ref('');
+
+// If requested, show the success message
+const QUERY_STRING = window.location.search;
+const URL_PARAMS = new URLSearchParams(QUERY_STRING);
+const showSuccessCreatedMessage = ref(URL_PARAMS.get('showSuccessCreatedMessage') === 'true');
+const showSuccessEditedMessage = ref(URL_PARAMS.get('showSuccessEditedMessage') === 'true');
+
+console.log('*** created', showSuccessCreatedMessage);
+console.log('*** edited', showSuccessEditedMessage);
+
+
+// If I'm editing a page, fetch the current object data
+let route = useRoute();
+let accountId = route.params.id ?? null;
+onMounted(async () => {
+  if (route.params.id) {
+    let accountResponse = await sendHttpReq('GET', `/accounts/api/${accountId}`);
+
+    let accountData = await accountResponse.json();
+    accountLabel.value = accountData.label;
+    accountUsername.value = accountData.label;
+    accountPassword.value = accountData.password;
+    accountNotes.value = accountData.notes;
+    accountType.value = accountData.type;
+    accountWebLink.value = accountData.web ? accountData.web.link : null;
+    accountSshLink.value = accountData.ssh ? accountData.ssh.link : null;
+    accountDatabaseHost.value = accountData.database ? accountData.database.host : null;
+    accountDatabaseType.value = accountData.database ? accountData.database.type : null;
+  }
+});
+
 
 async function saveAccount(event) {
   // Define the base payload
@@ -30,7 +63,6 @@ async function saveAccount(event) {
     password: accountPassword.value,
     notes: accountNotes.value,
     type: accountType.value,
-    encryption_key: sessionStorage.getItem('encryptionKey'),
   };
 
   // Add specific data about the account type
@@ -47,16 +79,24 @@ async function saveAccount(event) {
   }
 
   // Send the HTTP request and handle the response
-  let accountResponse = await sendHttpReq('POST', '/accounts/api/', accountPayload);
+  let httpMethod = accountId ? 'PATCH' : 'POST';
+  let url = accountId ? `/accounts/api/${accountId}/` : '/accounts/api/';
+  let accountResponse = await sendHttpReq(httpMethod, url, accountPayload);
+  let accountResponseJson = await accountResponse.json();
   switch (accountResponse.status) {
     case STATUS_CODES.OK_CREATED:
       fieldErrorMessages.value = {};
-      successMessage.value = 'Account created successfully.'
+      router.push(`/edit/${accountResponseJson.id}?showSuccessCreatedMessage=true`);
+      break;
+    case STATUS_CODES.OK:
+      fieldErrorMessages.value = {};
+      router.push(`/edit/${accountResponseJson.id}?showSuccessEditedMessage=true`);
+      showSuccessCreatedMessage.value = false;
+      showSuccessEditedMessage.value = true;
       break;
     case STATUS_CODES.PAYLOAD_ERROR:
       successMessage.value = '';
-      fieldErrorMessages.value = await accountResponse.json();
-      console.log('*** error', fieldErrorMessages.value);
+      fieldErrorMessages.value = accountResponseJson;
       break;
   }
 }
@@ -73,9 +113,11 @@ async function saveAccount(event) {
                 <div class="card__image">
                   <div class="bg-black u-opacity-70" style="width: 100%; height: 100%;"></div>
                 </div>
-                <div class="card__title-container">
-                  <p class="title">Add account credentials</p><span class="subtitle">Save the credentials of a new
-                    account.</span>
+                <div v-if="accountId" class="card__title-container">
+                  <p class="title">Edit account credentials</p><span class="subtitle">Edit the credentials of this account.</span>
+                </div>
+                <div v-else class="card__title-container">
+                  <p class="title">Add account credentials</p><span class="subtitle">Save the credentials of a new account.</span>
                 </div>
               </div>
               <form @submit.prevent="saveAccount">
@@ -91,6 +133,16 @@ async function saveAccount(event) {
                         <p>{{ successMessage }}</p>
                       </div>
                     </div>
+                    <div v-if="showSuccessCreatedMessage" class="col-12">
+                      <div class="toast toast--success" style="width: auto;">
+                        <p>Account created successfully.</p>
+                      </div>
+                    </div>
+                    <div v-if="showSuccessEditedMessage" class="col-12">
+                      <div class="toast toast--success" style="width: auto;">
+                        <p>Account edited successfully.</p>
+                      </div>
+                    </div>
                     <div class="col-12">
                       <input v-model="accountLabel" type="text" placeholder="Label for the account" />
                       <span class="info ml-1 text-danger" v-if="fieldErrorMessages.label">{{ fieldErrorMessages.label.join(',') }}</span>
@@ -99,9 +151,13 @@ async function saveAccount(event) {
                       <input v-model="accountUsername" type="text" placeholder="Username" />
                       <span class="info ml-1 text-danger" v-if="fieldErrorMessages.username">{{ fieldErrorMessages.username.join(',') }}</span>
                     </div>
-                    <div class="col-12">
-                      <input v-model="accountPassword" type="password" placeholder="Password" />
-                      <span class="info ml-1 text-danger" v-if="fieldErrorMessages.password">{{ fieldErrorMessages.password.join(',') }}</span>
+                    <div class="col-12 row">
+                      <div class="col-10 p-0">
+                        <input v-if="showPassword" v-model="accountPassword" type="text" placeholder="Password" />
+                        <input v-else v-model="accountPassword" type="password" placeholder="Password" />
+                        <span class="info ml-1 text-danger" v-if="fieldErrorMessages.password">{{ fieldErrorMessages.password.join(',') }}</span>
+                      </div>
+                      <div class="col-1 ml-1"><button @click.prevent="showPassword = !showPassword">Show</button></div>
                     </div>
                     <div class="col-12">
                       <textarea v-model="accountNotes" placeholder="Notes" />
@@ -140,7 +196,7 @@ async function saveAccount(event) {
                   </div>
                 </div>
                 <div class="card__action-bar u-center">
-                  <button type="submit">Save account</button>
+                  <input type="submit" value="Save account" />
                 </div>
               </form>
             </div>
