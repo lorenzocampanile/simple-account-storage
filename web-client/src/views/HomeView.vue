@@ -6,7 +6,7 @@ import HomePaginator from '@/components/HomePaginator.vue';
 
 const QUERY_STRING = window.location.search;
 const URL_PARAMS = new URLSearchParams(QUERY_STRING);
-let currentPage = parseInt(URL_PARAMS.get('page')) ?? 1;
+let currentPage = parseInt(URL_PARAMS.get('page') ?? 1);
 
 let accounts = ref([]);
 let previousPageLink = ref(null);
