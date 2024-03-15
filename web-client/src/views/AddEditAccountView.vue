@@ -30,10 +30,6 @@ const URL_PARAMS = new URLSearchParams(QUERY_STRING);
 const showSuccessCreatedMessage = ref(URL_PARAMS.get('showSuccessCreatedMessage') === 'true');
 const showSuccessEditedMessage = ref(URL_PARAMS.get('showSuccessEditedMessage') === 'true');
 
-console.log('*** created', showSuccessCreatedMessage);
-console.log('*** edited', showSuccessEditedMessage);
-
-
 // If I'm editing a page, fetch the current object data
 let route = useRoute();
 let accountId = route.params.id ?? null;
