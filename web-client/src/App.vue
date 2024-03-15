@@ -1,15 +1,12 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import { ref } from 'vue';
 
-// let dataCopyButtons = document.querySelectorAll('.data-copy-btn');
-// for (let button of dataCopyButtons) {
-//   button.addEventListener('click', () => {
-//     let textToCopy = button.getAttribute('data-copy');
-//     navigator.clipboard.writeText(textToCopy);
-//     button.setAttribute('data-tooltip', 'Copied!');
-//   })
-// }
-// console.log(dataCopyButtons);
+const NAVBAR_ENTRIES = ref([
+  {'name': 'Accounts list', 'link': '/'},
+  {'name': 'Add new account', 'link': '/add'},
+]);
+
 </script>
 
 <template>
@@ -29,14 +26,14 @@ import { RouterLink, RouterView } from 'vue-router'
           <div class="nav-item has-sub toggle-hover" id="dropdown">
             <a class="nav-dropdown-link">Menu</a>
             <ul class="dropdown-menu dropdown-animated" role="menu">
-              <li role="menu-item"><a href="/accounts/">Accounts list</a></li>
+              <li v-for="entry in NAVBAR_ENTRIES" role="menu-item"><RouterLink :to="entry.link">{{ entry.name }}</RouterLink></li>
             </ul>
           </div>
         </div>
       </div>
     </div>
     <section class="section">
-      <RouterView />
+      <RouterView :key="$route.path" />
     </section>
   </div>
 
