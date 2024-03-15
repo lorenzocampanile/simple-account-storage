@@ -5,15 +5,22 @@ import { onMounted, ref } from 'vue';
 
 const QUERY_STRING = window.location.search;
 const URL_PARAMS = new URLSearchParams(QUERY_STRING);
-let currentPage = URL_PARAMS.get(parseInt(URL_PARAMS.get('page'))) ?? 1;
+let currentPage = parseInt(URL_PARAMS.get('page')) ?? 1;
 
 let accounts = ref([]);
+let previousPageLink = ref(null);
+let nextPageLink = ref(null);
+let pageCount = ref(1);
 
 // Fetch the user's Account(s)
 onMounted(async () => {
   let accountsResponse = await sendHttpReq('GET', `/accounts/api`, {'page': currentPage});
   let accountsResponseData = await accountsResponse.json();
   accounts.value = accountsResponseData['results'];
+
+  previousPageLink.value = accountsResponseData['previous'];
+  nextPageLink.value = accountsResponseData['next'];
+  pageCount.value = parseInt(accountsResponseData['count'] / 10) + 1;
 });
 
 let getIconStlyeFromAccount = (account) => {
@@ -111,6 +118,13 @@ let copyPasswordToClipboard = async (account) => {
               <button v-if="account.type === 'ssh'" class="data-copy-btn btn bg-indigo-600 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'sshLinks')" @click="copyAccountPropertyToClipboard(account, 'ssh.link')">Copy SSH link</button>
               <button v-if="account.type === 'database'" class="data-copy-btn btn bg-teal-600 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'databaseHosts')" @click="copyAccountPropertyToClipboard(account, 'db.host')">Copy database host</button>
               <small class="text-gray-500">Created at: {{ account.created_at }}</small>
+            </div>
+          </div>
+          <div class="card px-2">
+            <div class="pagination pagination-bordered">
+              <div v-if="previousPageLink" class="pagination-item short"><RouterLink :to="'/?page=' + (currentPage - 1)">Prev</RouterLink></div>
+              <div v-for="i in pageCount" class="pagination-item short" :class="currentPage === i ? 'selected' : ''"><RouterLink :to="'/?page=' + i">{{ i }}</RouterLink></div>
+              <div v-if="nextPageLink" class="pagination-item short"><RouterLink :to="'/?page=' + (currentPage + 1)">Next</RouterLink></div>
             </div>
           </div>
         </div>
