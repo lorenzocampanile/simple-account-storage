@@ -33,7 +33,7 @@ const NAVBAR_ENTRIES = ref([
       </div>
     </div>
     <section class="section">
-      <RouterView :key="$route.path" />
+      <RouterView :key="$route.fullPath" />
     </section>
   </div>
 
