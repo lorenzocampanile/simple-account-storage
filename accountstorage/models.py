@@ -49,11 +49,6 @@ class Account(models.Model):
     def __str__(self) -> str:
         return self.label
 
-    def save(self, *args, **kwargs):
-        if not self.__original_password == self.password:
-            self.password = encrypt_password(self.password)
-        super().save(*args, **kwargs)
-
 
 class WebAccount(models.Model):
     """Additional account informations for web account"""
