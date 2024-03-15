@@ -42,6 +42,9 @@ class AccountSerializer(serializers.ModelSerializer):
             'id', 'label', 'username', 'password', 'notes', 'type',
             'created_at', 'updated_at', 'web', 'ssh', 'db',
         ]
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
 
     def create(self, validated_data):
         # Extract the specific type account data (e.g. link of a web portal)
