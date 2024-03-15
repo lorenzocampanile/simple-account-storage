@@ -2,6 +2,7 @@
 import { sendHttpReq } from '@/composables/httpreq';
 import router from '@/router';
 import { onMounted, ref } from 'vue';
+import HomePaginator from '@/components/HomePaginator.vue';
 
 const QUERY_STRING = window.location.search;
 const URL_PARAMS = new URLSearchParams(QUERY_STRING);
@@ -102,6 +103,7 @@ let copyPasswordToClipboard = async (account) => {
 
         <div class="p-4">
           <h3>Accounts list</h3>
+          <HomePaginator :pageCount="pageCount" :currentPage="currentPage" :previousPageLink="previousPageLink" :nextPageLink="nextPageLink" styleClasses="mb-2" />
           <div v-for="account in accounts" class="card">
             <div class="card__header">
               <p class="font-bold px-3">
@@ -120,13 +122,7 @@ let copyPasswordToClipboard = async (account) => {
               <small class="text-gray-500">Created at: {{ account.created_at }}</small>
             </div>
           </div>
-          <div class="card px-2">
-            <div class="pagination pagination-bordered">
-              <div v-if="previousPageLink" class="pagination-item short"><RouterLink :to="'/?page=' + (currentPage - 1)">Prev</RouterLink></div>
-              <div v-for="i in pageCount" class="pagination-item short" :class="currentPage === i ? 'selected' : ''"><RouterLink :to="'/?page=' + i">{{ i }}</RouterLink></div>
-              <div v-if="nextPageLink" class="pagination-item short"><RouterLink :to="'/?page=' + (currentPage + 1)">Next</RouterLink></div>
-            </div>
-          </div>
+          <HomePaginator :pageCount="pageCount" :currentPage="currentPage" :previousPageLink="previousPageLink" :nextPageLink="nextPageLink" styleClasses="mt-2" />
         </div>
       </div>
     </div>
