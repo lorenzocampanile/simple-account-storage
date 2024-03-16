@@ -181,15 +181,14 @@ REST_FRAMEWORK = {
 }
 
 
-# Django CORS headers allowed origins
-# https://pypi.org/project/django-cors-headers/
+# DEBUG configuration
 if DEBUG:
+    # Django CORS headers allowed origins
+    # https://pypi.org/project/django-cors-headers/
+    CORS_ALLOW_CREDENTIALS = True
     CORS_ALLOWED_ORIGINS = [
         'http://127.0.0.1:5173',
     ]
-
-    CORS_ALLOW_CREDENTIALS = True
-
     CORS_ALLOW_HEADERS = (
         "accept",
         "authorization",
@@ -199,3 +198,8 @@ if DEBUG:
         "x-requested-with",
         "x-encryption-key",
     )
+
+    # Use Mailhog
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = '127.0.0.1'
+    EMAIL_PORT = 1025

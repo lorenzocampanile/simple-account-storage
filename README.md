@@ -21,3 +21,8 @@ A simple, web based, storage for your online accounts. Store username, password,
 5. Run the project: `env/bin/python manage.py runserver`
 6. Add your users and their associated accounts: `http://127.0.0.1:8000/admin/`
 7. Go to page: `http://127.0.0.1:8000/accounts/`
+
+## Run for development
+1. Run the Django backend server: `python manage.py runserver`
+2. Run the web client NPM server: `cd web-client` and `npm run dev`
+3. Run Mailhog (optional, if using emails): `mailhog -api-bind-addr 127.0.0.1:8080 -ui-bind-addr 127.0.0.1:8080`
