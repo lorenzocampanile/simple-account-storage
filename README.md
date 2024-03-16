@@ -24,5 +24,5 @@ A simple, web based, storage for your online accounts. Store username, password,
 
 ## Run for development
 1. Run the Django backend server: `python manage.py runserver`
-2. Run the web client NPM server: `cd web-client` and `npm run dev`
+2. Run the web client NPM server: `cd web-client`, `echo "VITE_BASE_API_URL=http://127.0.0.1:8000" > .env` and `npm run dev`
 3. Run Mailhog (optional, if using emails): `mailhog -api-bind-addr 127.0.0.1:8080 -ui-bind-addr 127.0.0.1:8080`
