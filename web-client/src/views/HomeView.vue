@@ -21,7 +21,11 @@ onMounted(async () => {
 
   previousPageLink.value = accountsResponseData['previous'];
   nextPageLink.value = accountsResponseData['next'];
+
   pageCount.value = parseInt(accountsResponseData['count'] / 10) + 1;
+  if (accountsResponseData['count'] % 10 === 0) {
+    pageCount.value = accountsResponseData['count'] / 10;
+  }
 });
 
 let getIconStlyeFromAccount = (account) => {
