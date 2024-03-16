@@ -42,8 +42,9 @@ class AccountViewSet(viewsets.ModelViewSet):
         response_data = serializer.data
 
         # Decode the password using the encryption key
-        encryption_key = request.META['HTTP_X_ENCRYPTION_KEY']
-        plain_text_password = decrypt_password(instance.password, encryption_key)
-        response_data['password'] = plain_text_password
+        encryption_key = request.META.get('HTTP_X_ENCRYPTION_KEY')
+        if encryption_key:
+            plain_text_password = decrypt_password(instance.password, encryption_key)
+            response_data['password'] = plain_text_password
 
         return Response(response_data)
