@@ -1,10 +1,10 @@
 import { STATUS_CODES, sendHttpReq } from "./httpreq";
 
 export async function login(username, password) {
-  let response = await sendHttpReq('POST', '/auth/v2/login/', {
-    'username': username,
+  let response = await sendHttpReq('POST', '/api/v1/accounts/login/', {
+    'login': username,
     'password': password,
-  }, 'application/x-www-form-urlencoded');
+  });
 
   // Set the password as the encryption key to use
   sessionStorage.removeItem('encryptionKey');
