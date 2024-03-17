@@ -11,7 +11,7 @@ const signUpError = ref('');
 const signUpFieldErrors = ref({});
 
 async function performSignUp(event) {
-  let accountResponse = await sendHttpReq('POST', '/api/v1/accounts/register/', {
+  let accountResponse = await sendHttpReq('POST', '/api/v1/auth/register/', {
     "email": username.value,
     "password": password.value,
     "password_confirm": passwordConfirm.value,

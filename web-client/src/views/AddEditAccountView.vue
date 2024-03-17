@@ -38,7 +38,7 @@ let route = useRoute();
 let accountId = route.params.id ?? null;
 onMounted(async () => {
   if (route.params.id) {
-    let accountResponse = await sendHttpReq('GET', `/accounts/api/${accountId}`);
+    let accountResponse = await sendHttpReq('GET', `/api/v1/accounts/${accountId}/`);
 
     let accountData = await accountResponse.json();
     accountLabel.value = accountData.label;
@@ -79,7 +79,7 @@ async function saveAccount(event) {
 
   // Send the HTTP request and handle the response
   let httpMethod = accountId ? 'PATCH' : 'POST';
-  let url = accountId ? `/accounts/api/${accountId}/` : '/accounts/api/';
+  let url = accountId ? `/api/v1/accounts/${accountId}/` : '/api/v1/accounts/';
   let accountResponse = await sendHttpReq(httpMethod, url, accountPayload);
   let accountResponseJson = await accountResponse.json();
   switch (accountResponse.status) {
@@ -101,7 +101,7 @@ async function saveAccount(event) {
 }
 
 async function deleteAccount() {
-  let url = `/accounts/api/${accountId}/`;
+  let url = `/api/v1/accounts/${accountId}/`;
   let accountResponse = await sendHttpReq('DELETE', url);
   switch (accountResponse.status) {
     case STATUS_CODES.NO_CONTENT:

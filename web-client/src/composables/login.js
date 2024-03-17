@@ -2,7 +2,7 @@ import router from "@/router";
 import { STATUS_CODES, sendHttpReq } from "./httpreq";
 
 export async function login(username, password) {
-  let response = await sendHttpReq('POST', '/api/v1/accounts/login/', {
+  let response = await sendHttpReq('POST', '/api/v1/auth/login/', {
     'login': username,
     'password': password,
   });
@@ -17,7 +17,7 @@ export async function login(username, password) {
 }
 
 export async function logout() {
-  let response = await sendHttpReq('POST', '/api/v1/accounts/logout/', {});
+  let response = await sendHttpReq('POST', '/api/v1/auth/logout/', {});
   if (response.status === STATUS_CODES.OK) {
     router.push('/login');
   }

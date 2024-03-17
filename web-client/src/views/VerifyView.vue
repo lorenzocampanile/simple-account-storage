@@ -9,7 +9,7 @@
   const URL_PARAMS = new URLSearchParams(QUERY_STRING);
 
   onMounted(async () => {
-    let response = await sendHttpReq('POST', '/api/v1/accounts/verify-registration/', {
+    let response = await sendHttpReq('POST', '/api/v1/auth/verify-registration/', {
       "user_id": URL_PARAMS.get('user_id'),
       "timestamp": URL_PARAMS.get('timestamp'),
       "signature": URL_PARAMS.get('signature'),

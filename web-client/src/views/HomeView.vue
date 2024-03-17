@@ -15,7 +15,7 @@ let pageCount = ref(1);
 
 // Fetch the user's Account(s)
 onMounted(async () => {
-  let accountsResponse = await sendHttpReq('GET', `/accounts/api`, {'page': currentPage});
+  let accountsResponse = await sendHttpReq('GET', `/api/v1/accounts/`, {'page': currentPage});
   let accountsResponseData = await accountsResponse.json();
   accounts.value = accountsResponseData['results'];
 
@@ -85,7 +85,7 @@ let copyAccountPropertyToClipboard = (account, propName) => {
 }
 
 let copyPasswordToClipboard = async (account) => {
-  let url = `/accounts/api/${account.id}`;
+  let url = `/api/v1/accounts/${account.id}/`;
   copiedRefs.value.loadingPasswords.push(account.id);
   let accountResponse = await sendHttpReq('GET', url);
   let accountResponseData = await accountResponse.json();

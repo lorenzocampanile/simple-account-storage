@@ -38,7 +38,7 @@ export async function sendHttpReq(method, url, params, contentType = 'applicatio
   let reqBody = '';
   if (method.toUpperCase() === 'GET') {
     let encodedParams = new URLSearchParams(params).toString();
-    url = `${url}/?${encodedParams}`;
+    url = `${url}?${encodedParams}`;
   } else {
     if (contentType == 'application/json') {
       reqBody = JSON.stringify(params);

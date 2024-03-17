@@ -6,10 +6,8 @@ from accountstorage.views import AccountListView, AccountViewSet
 
 
 app_name = "account"
-urlpatterns = [
-    path('', AccountListView.as_view(), name='index'),
-]
+urlpatterns = []
 
 router = DefaultRouter()
-router.register(r'api', AccountViewSet, basename='accounts')
+router.register(r'', AccountViewSet, basename='accounts')
 urlpatterns = router.urls
