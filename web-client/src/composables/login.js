@@ -1,3 +1,4 @@
+import router from "@/router";
 import { STATUS_CODES, sendHttpReq } from "./httpreq";
 
 export async function login(username, password) {
@@ -13,4 +14,22 @@ export async function login(username, password) {
   }
 
   return response;
+}
+
+export async function logout() {
+  let response = await sendHttpReq('POST', '/api/v1/accounts/logout/', {});
+  if (response.status === STATUS_CODES.OK) {
+    router.push('/login');
+  }
+
+  sessionStorage.removeItem('encryptionKey');
+}
+
+export function isUserAuthenticated() {
+  let key = sessionStorage.getItem('encryptionKey');
+  if (key) {
+    return true;
+  }
+
+  return false;
 }
