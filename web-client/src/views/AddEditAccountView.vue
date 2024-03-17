@@ -2,7 +2,7 @@
 import { STATUS_CODES, sendHttpReq } from '@/composables/httpreq';
 import router from '@/router';
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { RouterLink, useRoute } from 'vue-router';
 
 const ACCOUNT_TYPES = {
   WEB_PORTAL: 'web',
@@ -167,17 +167,17 @@ async function deleteAccount() {
                       </div>
                       <div v-if="showSuccessCreatedMessage" class="col-12">
                         <div class="toast toast--success" style="width: auto;">
-                          <p>Account created successfully.</p>
+                          <p>Account created successfully. <RouterLink to="/"><u>Go to the accounts list page.</u></RouterLink></p>
                         </div>
                       </div>
                       <div v-if="showSuccessEditedMessage" class="col-12">
                         <div class="toast toast--success" style="width: auto;">
-                          <p>Account edited successfully.</p>
+                          <p>Account edited successfully. <RouterLink to="/"><u>Go to the accounts list page.</u></RouterLink></p>
                         </div>
                       </div>
                       <div v-if="showSuccessDeleteMessage" class="col-12">
                         <div class="toast toast--success" style="width: auto;">
-                          <p>Account deleted successfully.</p>
+                          <p>Account deleted successfully. <RouterLink to="/"><u>Go to the accounts list page.</u></RouterLink></p>
                         </div>
                       </div>
                       <div class="col-12">
