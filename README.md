@@ -9,18 +9,19 @@ A simple, web based, storage for your online accounts. Store username, password,
 2. Create the configuration file:
 ```
     cd simple-account-storage
-    printf "[baseconfig]\nDEBUG = false\nSECRET_KEY = your_secret_key\nENCRYPTION_KEY = another_secret_key\nALLOWED_HOSTS = 127.0.0.1,myenrironment.local" > simpleaccountstorage.conf
+    printf "[baseconfig]\nDEBUG = false\nSECRET_KEY = your_secret_key\nENCRYPTION_KEY = another_secret_key\nALLOWED_HOSTS = 127.0.0.1,myenrironment.local\nCSRF_TRUSTED_ORIGINS = http://127.0.0.1:5173\nFRONTEND_BASE_URL = http://127.0.0.1:5173" > simpleaccountstorage.conf
 ```
 3. Install the dependencies:
 ```
     python -m venv env
     env/bin/pip install -r requirements.txt
     env/bin/python manager.py runserver
+    cd web-client
+    npm install
+    cd ..
 ```
-4. Create the superuser, for managing users and accounts: `env/bin/python manage.py createsuperuser`
-5. Run the project: `env/bin/python manage.py runserver`
-6. Add your users and their associated accounts: `http://127.0.0.1:8000/admin/`
-7. Go to page: `http://127.0.0.1:8000/accounts/`
+4. Run the project: `env/bin/python manage.py runserver`
+5. Go to page: `http://127.0.0.1:5173`
 
 ## Run for development
 1. Run the Django backend server: `python manage.py runserver`
