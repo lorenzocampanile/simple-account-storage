@@ -15,8 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-from django.views.generic.base import RedirectView
+from django.urls import path, include, re_path
+from django.conf import settings
+from django.contrib.staticfiles.views import serve as serve_static
+from django.views.generic import TemplateView
+
 
 urlpatterns = [
     # Django Admin
@@ -28,3 +31,17 @@ urlpatterns = [
     # Accounts CRUD APIs
     path('api/v1/accounts/', include('accountstorage.urls')),
 ]
+
+
+# If DEBUG is False, serve also the SPA static files.
+#
+# This should be made directly by Nginx (or another web server, and that's the best practice)
+# but, just to be more comfortable, I'll do that using Django.
+#
+# You can just configure your webserver to serve the STATIC_ROOT directly.
+if not settings.DEBUG:
+    urlpatterns += [
+        re_path(r'^(?P<path>assets\/.*)$', serve_static, {'insecure': True}),
+        re_path(r'^(?P<path>images\/.*)$', serve_static, {'insecure': True}),
+        re_path('^(?P<path>.*)$', TemplateView.as_view(template_name='index.html')),
+    ]

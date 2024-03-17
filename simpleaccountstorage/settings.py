@@ -87,7 +87,7 @@ ROOT_URLCONF = 'simpleaccountstorage.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['simpleaccountstorage/templates/'],
+        'DIRS': ['simpleaccountstorage/templates/', BASE_DIR / "web-client/dist/"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -99,6 +99,15 @@ TEMPLATES = [
         },
     },
 ]
+
+
+# https://docs.djangoproject.com/en/4.2/howto/static-files/
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'web-client/dist/',
+]
+STATIC_ROOT = BASE_DIR / 'static-root/'
+
 
 WSGI_APPLICATION = 'simpleaccountstorage.wsgi.application'
 
