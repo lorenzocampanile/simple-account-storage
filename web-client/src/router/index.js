@@ -1,7 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
+import SignUpView from '../views/SignUpView.vue'
+import VerifyView from '../views/VerifyView.vue'
 import AddEditAccountView from '@/views/AddEditAccountView.vue'
+
+let requireLoginBeforeEnter = (to, from) => {
+  if (!sessionStorage.getItem('encryptionKey')) {
+    return router.push({ name: 'login' });
+  }
+};
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,24 +20,32 @@ const router = createRouter({
       component: LoginView,
     },
     {
+      path: '/signup',
+      name: 'signup',
+      component: SignUpView,
+    },
+    {
+      path: '/verify-user',
+      name: 'verifyUser',
+      component: VerifyView,
+    },
+    {
       path: '/',
       name: 'home',
       component: HomeView,
-      beforeEnter: (to, from) => {
-        if (!sessionStorage.getItem('encryptionKey')) {
-          return router.push({ name: 'login' });
-        }
-      }
+      beforeEnter: requireLoginBeforeEnter,
     },
     {
       path: '/add',
       name: 'addAccount',
       component: AddEditAccountView,
+      beforeEnter: requireLoginBeforeEnter,
     },
     {
       path: '/edit/:id',
       name: 'editAccount',
       component: AddEditAccountView,
+      beforeEnter: requireLoginBeforeEnter,
     },
     // {
     //   path: '/about',

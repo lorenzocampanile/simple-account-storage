@@ -54,6 +54,9 @@ async function performLogin(event) {
                 <div class="card__action-bar u-center">
                   <button type="submit">Sign in</button>
                 </div>
+                <div class="card__footer">
+                  <div class="u-text-center"><span>Don't have an account yet? <RouterLink to="/signup">Sign up!</RouterLink></span></div>
+                </div>
               </form>
             </div>
           </div>
