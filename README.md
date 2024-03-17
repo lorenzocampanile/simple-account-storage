@@ -6,24 +6,34 @@ A simple, web based, storage for your online accounts. Store username, password,
 
 ## Installation
 1. Clone this project: `git clone https://github.com/lorenzocampanile/simple-account-storage.git`
-2. Create the configuration file:
+1. Create the configuration file:
 ```
     cd simple-account-storage
-    printf "[baseconfig]\nDEBUG = false\nSECRET_KEY = your_secret_key\nENCRYPTION_KEY = another_secret_key\nALLOWED_HOSTS = 127.0.0.1,myenrironment.local\nCSRF_TRUSTED_ORIGINS = http://127.0.0.1:5173\nFRONTEND_BASE_URL = http://127.0.0.1:5173" > simpleaccountstorage.conf
+    printf "[baseconfig]\nDEBUG = false\nSECRET_KEY = your_secret_key\nENCRYPTION_KEY_SALT = your_salt\nALLOWED_HOSTS = mydomail.com\nCSRF_TRUSTED_ORIGINS = https://mydomail.com\nFRONTEND_BASE_URL = https://mydomail.com" > simpleaccountstorage.conf
 ```
-3. Install the dependencies:
+1. Install the dependencies:
 ```
     python -m venv env
     env/bin/pip install -r requirements.txt
     env/bin/python manager.py runserver
     cd web-client
     npm install
+    echo "VITE_BASE_API_URL=https://mydomail.com" > .env
+    npm run build
     cd ..
 ```
-4. Run the project: `env/bin/python manage.py runserver`
-5. Go to page: `http://127.0.0.1:5173`
+1. Collect static files: `env/bin/python manage.py collectstatic`
+1. Run the project: `env/bin/gunicorn simpleaccountstorage.wsgi # probably you want this under systemd or similar`
+1. Configure your webserver to:
+* serve the `static-root` folder directly (optional, but highly reccomended)
+* proxy_pass all `/api` requests to gunicorn web server
+1. Go to page: `https://mydomail.com`
 
 ## Run for development
+1. Create the configuration file:
+```
+printf "[baseconfig]\nDEBUG = true\nSECRET_KEY = your_secret_key\nENCRYPTION_KEY_SALT = your_salt\nALLOWED_HOSTS = 127.0.0.1,myenrironment.local\nCSRF_TRUSTED_ORIGINS = http://127.0.0.1:5173\nFRONTEND_BASE_URL = http://127.0.0.1:5173" > simpleaccountstorage.conf
+```
 1. Run the Django backend server: `python manage.py runserver`
-2. Run the web client NPM server: `cd web-client`, `echo "VITE_BASE_API_URL=http://127.0.0.1:8000" > .env` and `npm run dev`
-3. Run Mailhog (optional, if using emails): `mailhog -api-bind-addr 127.0.0.1:8080 -ui-bind-addr 127.0.0.1:8080`
+1. Run the web client NPM server: `cd web-client`, `echo "VITE_BASE_API_URL=http://127.0.0.1:8000" > .env` and `npm run dev`
+1. Run Mailhog (optional, if using emails): `mailhog -api-bind-addr 127.0.0.1:8080 -ui-bind-addr 127.0.0.1:8080`
