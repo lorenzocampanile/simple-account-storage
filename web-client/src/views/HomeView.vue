@@ -101,32 +101,36 @@ let copyPasswordToClipboard = async (account) => {
 </script>
 
 <template>
-  <div class="hero fullscreen bg-gray-300">
-    <div class="hero-body">
+  <div class="fullscreen bg-gray-300">
+    <div class="mt-4">
       <div class="content">
-
         <div class="p-4">
           <h3>Accounts list</h3>
-          <HomePaginator :pageCount="pageCount" :currentPage="currentPage" :previousPageLink="previousPageLink" :nextPageLink="nextPageLink" styleClasses="mb-2" />
-          <div v-for="account in accounts" class="card">
-            <div class="card__header">
-              <p class="font-bold px-3">
-                <i class="fa fa-solid" :class="getIconStlyeFromAccount(account)"></i> -
-                {{ account.label }}
-              </p>
-              <p>{{ account.notes }}</p>
+          <div v-if="accounts.length > 0">
+            <HomePaginator :pageCount="pageCount" :currentPage="currentPage" :previousPageLink="previousPageLink" :nextPageLink="nextPageLink" styleClasses="mb-2" />
+            <div v-for="account in accounts" class="card">
+              <div class="card__header">
+                <p class="font-bold px-3">
+                  <i class="fa fa-solid" :class="getIconStlyeFromAccount(account)"></i> -
+                  {{ account.label }}
+                </p>
+                <p>{{ account.notes }}</p>
+              </div>
+              <div class="card__action-bar u-right">
+                <button class="data-copy-btn btn bg-gray-600 text-white" @click="goToEditAccountPage(account)">Edit account</button>
+                <button class="data-copy-btn btn bg-green-400 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'usernames')" @click="copyAccountPropertyToClipboard(account, 'username')">Copy username</button>
+                <button class="data-copy-btn btn bg-gray-600 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'passwords')" @click="copyPasswordToClipboard(account)">Copy password</button>
+                <button v-if="account.type === 'web'" class="data-copy-btn btn btn-link tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'webLinks')" @click="copyAccountPropertyToClipboard(account, 'web.link')">Copy web link</button>
+                <button v-if="account.type === 'ssh'" class="data-copy-btn btn bg-indigo-600 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'sshLinks')" @click="copyAccountPropertyToClipboard(account, 'ssh.link')">Copy SSH link</button>
+                <button v-if="account.type === 'database'" class="data-copy-btn btn bg-teal-600 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'databaseHosts')" @click="copyAccountPropertyToClipboard(account, 'db.host')">Copy database host</button>
+                <small class="text-gray-500">Created at: {{ account.created_at }}</small>
+              </div>
             </div>
-            <div class="card__action-bar u-right">
-              <button class="data-copy-btn btn bg-gray-600 text-white" @click="goToEditAccountPage(account)">Edit account</button>
-              <button class="data-copy-btn btn bg-green-400 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'usernames')" @click="copyAccountPropertyToClipboard(account, 'username')">Copy username</button>
-              <button class="data-copy-btn btn bg-gray-600 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'passwords')" @click="copyPasswordToClipboard(account)">Copy password</button>
-              <button v-if="account.type === 'web'" class="data-copy-btn btn btn-link tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'webLinks')" @click="copyAccountPropertyToClipboard(account, 'web.link')">Copy web link</button>
-              <button v-if="account.type === 'ssh'" class="data-copy-btn btn bg-indigo-600 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'sshLinks')" @click="copyAccountPropertyToClipboard(account, 'ssh.link')">Copy SSH link</button>
-              <button v-if="account.type === 'database'" class="data-copy-btn btn bg-teal-600 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'databaseHosts')" @click="copyAccountPropertyToClipboard(account, 'db.host')">Copy database host</button>
-              <small class="text-gray-500">Created at: {{ account.created_at }}</small>
-            </div>
+            <HomePaginator :pageCount="pageCount" :currentPage="currentPage" :previousPageLink="previousPageLink" :nextPageLink="nextPageLink" styleClasses="mt-2" />
           </div>
-          <HomePaginator :pageCount="pageCount" :currentPage="currentPage" :previousPageLink="previousPageLink" :nextPageLink="nextPageLink" styleClasses="mt-2" />
+          <div v-else>
+            <p>You don't have any saved account yes, <RouterLink to="/add">create one 😎</RouterLink></p>
+          </div>
         </div>
       </div>
     </div>
