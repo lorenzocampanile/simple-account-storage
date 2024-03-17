@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     # 3rd party apps
     'rest_framework',
     'corsheaders',
+    'rest_registration',
 
     # Project apps
     'authentication.apps.AuthenticationConfig',
@@ -180,6 +181,18 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
+# Django REST Registration settings
+# https://django-rest-registration.readthedocs.io/en/latest/quickstart.html
+
+REST_REGISTRATION = {
+    # Disable the reset password endpoint
+    'RESET_PASSWORD_VERIFICATION_ENABLED': False,
+
+    'REGISTER_VERIFICATION_URL': f"{config['FRONTEND_BASE_URL']}/verify-user",
+    'REGISTER_EMAIL_VERIFICATION_URL': f"{config['FRONTEND_BASE_URL']}/verify-email/",
+
+    'VERIFICATION_FROM_EMAIL': 'no-reply@example.com',
+}
 
 # DEBUG configuration
 if DEBUG:
