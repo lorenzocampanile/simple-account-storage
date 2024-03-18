@@ -216,7 +216,7 @@ SERVER_EMAIL = config.get('SERVER_EMAIL')
 # Email this users when there is a 500 error
 # https://docs.djangoproject.com/en/4.2/ref/settings/#admins
 
-ADMINS = config.get('ADMINS').split(',')
+ADMINS = list(map(lambda x: ('', x), config.get('ADMINS').split(',')))
 
 
 # DEBUG configuration
