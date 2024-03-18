@@ -30,9 +30,6 @@ config = config_parser['baseconfig']
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config['SECRET_KEY']
 
-# Key used for encrypt/decrypt accounts passwords
-ENCRYPTION_KEY = config['ENCRYPTION_KEY']
-
 # Salt used for the encrypt/decrypt key
 ENCRYPTION_KEY_SALT = config['ENCRYPTION_KEY_SALT']
 

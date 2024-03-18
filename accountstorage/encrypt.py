@@ -17,8 +17,7 @@ def generate_fernet_key_from_password(password: str):
     return base64.urlsafe_b64encode(kdf.derive(password.encode()))
 
 
-def encrypt_password(plain_text_password, encryption_key='') -> str:
-    f = Fernet(settings.ENCRYPTION_KEY)
+def encrypt_password(plain_text_password, encryption_key) -> str:
     if encryption_key:
         key = generate_fernet_key_from_password(encryption_key)
         f = Fernet(key)
@@ -27,8 +26,7 @@ def encrypt_password(plain_text_password, encryption_key='') -> str:
     return encrypted_password.decode()
 
 
-def decrypt_password(encrypted_password, encryption_key='') -> str:
-    f = Fernet(settings.ENCRYPTION_KEY)
+def decrypt_password(encrypted_password, encryption_key) -> str:
     if encryption_key:
         key = generate_fernet_key_from_password(encryption_key)
         f = Fernet(key)
