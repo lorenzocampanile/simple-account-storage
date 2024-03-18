@@ -200,6 +200,25 @@ REST_REGISTRATION = {
     'VERIFICATION_FROM_EMAIL': 'no-reply@example.com',
 }
 
+
+# Email configuration
+# https://docs.djangoproject.com/en/4.2/topics/email/
+
+EMAIL_HOST = config.get('EMAIL_HOST')
+EMAIL_PORT = config.get('EMAIL_PORT')
+EMAIL_HOST_USER = config.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = config.get('EMAIL_USE_TLS')
+EMAIL_TIMEOUT = config.get('EMAIL_TIMEOUT')
+EMAIL_FROM = config.get('EMAIL_FROM')
+SERVER_EMAIL = config.get('SERVER_EMAIL')
+
+# Email this users when there is a 500 error
+# https://docs.djangoproject.com/en/4.2/ref/settings/#admins
+
+ADMINS = config.get('ADMINS').split(',')
+
+
 # DEBUG configuration
 if DEBUG:
     # Django CORS headers allowed origins
