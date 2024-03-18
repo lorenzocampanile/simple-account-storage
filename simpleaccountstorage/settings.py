@@ -197,7 +197,7 @@ REST_REGISTRATION = {
     'REGISTER_VERIFICATION_URL': f"{config['FRONTEND_BASE_URL']}/verify-user",
     'REGISTER_EMAIL_VERIFICATION_URL': f"{config['FRONTEND_BASE_URL']}/verify-email/",
 
-    'VERIFICATION_FROM_EMAIL': 'no-reply@example.com',
+    'VERIFICATION_FROM_EMAIL': config.get('VERIFICATION_FROM_EMAIL', 'no-reply@example.com'),
 }
 
 
