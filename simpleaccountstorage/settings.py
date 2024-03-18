@@ -216,7 +216,41 @@ SERVER_EMAIL = config.get('SERVER_EMAIL')
 # Email this users when there is a 500 error
 # https://docs.djangoproject.com/en/4.2/ref/settings/#admins
 
-ADMINS = list(map(lambda x: ('', x), config.get('ADMINS').split(',')))
+ADMINS = list(map(lambda x: ('', x), config.get('ADMINS', '').split(',')))
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': config.get('LOG_FILENAME', '/var/log/simple-account-storage/error.log'),
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers':['file'],
+            'propagate': True,
+            'level':'DEBUG',
+        },
+        'owngrid': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
+    }
+}
 
 
 # DEBUG configuration
