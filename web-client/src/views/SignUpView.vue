@@ -9,6 +9,7 @@ const password = ref('');
 const passwordConfirm = ref('');
 const signUpError = ref('');
 const signUpFieldErrors = ref({});
+const successMessage = ref('');
 
 async function performSignUp(event) {
   let accountResponse = await sendHttpReq('POST', '/api/v1/auth/register/', {
@@ -17,16 +18,28 @@ async function performSignUp(event) {
     "password_confirm": passwordConfirm.value,
   })
 
+  function cleanForm() {
+    username.value = '';
+    password.value = '';
+    passwordConfirm.value = '';
+  }
+
+  function cleanResponseMessages() {
+    signUpError.value = '';
+    signUpFieldErrors.value = {};
+    successMessage.value = '';
+  }
+
   let accountResponseData = {};
   switch (accountResponse.status) {
     case STATUS_CODES.OK_CREATED:
-      signUpError.value = '';
-      signUpFieldErrors.value = {};
+      cleanForm();
+      cleanResponseMessages();
       accountResponseData = await accountResponse.json();
+      successMessage.value = 'We sent a confirmation email. Please check your inbox 🥳.'
       break;
     case STATUS_CODES.PAYLOAD_ERROR:
-      signUpError.value = '';
-      signUpFieldErrors.value = {};
+      cleanResponseMessages();
       accountResponseData = await accountResponse.json();
       signUpFieldErrors.value = accountResponseData;
       signUpError.value = accountResponseData.non_field_errors.join(', ');
@@ -55,6 +68,11 @@ async function performSignUp(event) {
                     <div v-if="signUpError" class="col-12">
                       <div class="toast toast--danger" style="width: auto;">
                         <p>{{ signUpError }}</p>
+                      </div>
+                    </div>
+                    <div v-if="successMessage" class="col-12">
+                      <div class="toast toast--success" style="width: auto;">
+                        <p>{{ successMessage }}</p>
                       </div>
                     </div>
                     <div class="col-12">
