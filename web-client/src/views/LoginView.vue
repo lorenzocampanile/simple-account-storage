@@ -35,7 +35,7 @@ async function performLogin(event) {
                   <p class="title">Sign in</p><span class="subtitle">Insert username and password</span>
                 </div>
               </div>
-              <div>
+              <form @submit.prevent="performLogin">
                 <div class="content">
                   <div class="row u-gap-2 mt-3">
                     <div v-if="authenticationError" class="col-12">
@@ -52,12 +52,12 @@ async function performLogin(event) {
                   </div>
                 </div>
                 <div class="card__action-bar u-center">
-                  <button type="submit" @click.prevent="performLogin">Sign in</button>
+                  <button type="submit">Sign in</button>
                 </div>
                 <div class="card__footer">
                   <div class="u-text-center"><span>Don't have an account yet? <RouterLink to="/signup">Sign up!</RouterLink></span></div>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>
