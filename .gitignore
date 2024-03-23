@@ -165,3 +165,6 @@ simpleaccountstorage.conf
 
 # TODO file
 todo.txt
+
+# Scripts for deployment
+deploy.sh
