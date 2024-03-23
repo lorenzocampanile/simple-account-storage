@@ -23,13 +23,11 @@ async function performSignUp(event) {
       signUpError.value = '';
       signUpFieldErrors.value = {};
       accountResponseData = await accountResponse.json();
-      console.log('*** ', accountResponseData);
       break;
     case STATUS_CODES.PAYLOAD_ERROR:
       signUpError.value = '';
       signUpFieldErrors.value = {};
       accountResponseData = await accountResponse.json();
-      console.log('*** ', accountResponseData);
       signUpFieldErrors.value = accountResponseData;
       signUpError.value = accountResponseData.non_field_errors.join(', ');
   }
