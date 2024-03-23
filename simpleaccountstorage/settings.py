@@ -48,6 +48,12 @@ CSRF_COOKIE_SECURE = not DEBUG
 CSRF_TRUSTED_ORIGINS = config['CSRF_TRUSTED_ORIGINS'].split(',')
 
 
+# CSRF Cookie domain
+# https://docs.djangoproject.com/en/5.0/ref/settings/#csrf-cookie-domain
+
+CSRF_COOKIE_DOMAIN = config.get('CSRF_COOKIE_DOMAIN')
+
+
 # Application definition
 
 INSTALLED_APPS = [
