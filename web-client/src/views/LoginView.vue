@@ -18,12 +18,12 @@ async function performLogin(event) {
   tmpCounter++;
   console.log(event);
 
-  let loginResponse = await login(username.value, password.value);
+  // let loginResponse = await login(username.value, password.value);
 
-  if (loginResponse.status === STATUS_CODES.OK) {
-    authenticationError.value = '';
-    router.push({ path: '/' });
-  }
+  // if (loginResponse.status === STATUS_CODES.OK) {
+  //   authenticationError.value = '';
+  //   router.push({ path: '/' });
+  // }
 
   authenticationError.value = 'Invalid username or password.';
 }
