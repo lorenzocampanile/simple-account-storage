@@ -18,12 +18,12 @@ async function performLogin(event) {
   tmpCounter++;
   console.log(event);
 
-  // let loginResponse = await login(username.value, password.value);
+  let loginResponse = await login(username.value, password.value);
 
-  // if (loginResponse.status === STATUS_CODES.OK) {
-  //   authenticationError.value = '';
-  //   router.push({ path: '/' });
-  // }
+  if (loginResponse.status === STATUS_CODES.OK) {
+    authenticationError.value = '';
+    router.push({ path: '/' });
+  }
 
   authenticationError.value = 'Invalid username or password.';
 }
@@ -44,7 +44,7 @@ async function performLogin(event) {
                   <p class="title">Sign in</p><span class="subtitle">Insert username and password</span>
                 </div>
               </div>
-              <form>
+              <div>
                 <div class="content">
                   <div class="row u-gap-2 mt-3">
                     <div v-if="authenticationError" class="col-12">
@@ -66,7 +66,7 @@ async function performLogin(event) {
                 <div class="card__footer">
                   <div class="u-text-center"><span>Don't have an account yet? <RouterLink to="/signup">Sign up!</RouterLink></span></div>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
