@@ -20,10 +20,15 @@ from django.conf import settings
 from django.contrib.staticfiles.views import serve as serve_static
 from django.views.generic import TemplateView
 
+from .views import CsrfTokenView
+
 
 urlpatterns = [
     # Django Admin
     path('admin/', admin.site.urls),
+
+    # CSRF token endpoint
+    path('api/csrf/', CsrfTokenView.as_view()),
 
     # Authentication endpoints
     path('api/v1/auth/', include('rest_registration.api.urls')),
