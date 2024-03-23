@@ -20,7 +20,7 @@ export async function getCsrfToken() {
           } else {
             // In order to have the CSRF token cookie available, I need to call a GET API
             // TODO: Use another endpoint
-            await fetch(`${import.meta.env.VITE_BASE_API_URL}/api/csrf/`);
+            await fetch(`${import.meta.env.VITE_BASE_API_URL}/api/csrf/`, {credentials: "include"});
             cookieValue = getCsrfToken();
           }
       }
