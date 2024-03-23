@@ -8,7 +8,16 @@ const username = ref('');
 const password = ref('');
 const authenticationError = ref('');
 
+let tmpCounter = 0;
+
 async function performLogin(event) {
+  if (tmpCounter > 1000) {
+    return;
+  }
+
+  tmpCounter++;
+  console.log(event);
+
   let loginResponse = await login(username.value, password.value);
 
   if (loginResponse.status === STATUS_CODES.OK) {
