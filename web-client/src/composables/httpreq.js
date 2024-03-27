@@ -27,9 +27,8 @@ export async function readCsrfToken() {
 
 
 export async function getCsrfToken() {
-  let cookieValue = readCsrfToken();
+  let cookieValue = await readCsrfToken();
 
-  console.log('csrf ***', cookieValue);
   if (!cookieValue) {
     await fetch(`${import.meta.env.VITE_BASE_API_URL}/api/csrf/`, {credentials: "include"});
     cookieValue = readCsrfToken();
