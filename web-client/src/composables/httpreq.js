@@ -6,7 +6,8 @@ export const STATUS_CODES = {
   NO_CONTENT: 204,
 }
 
-export async function getCsrfToken() {
+
+export async function readCsrfToken() {
   let name = 'csrftoken';
   let cookieValue = null;
   if (document.cookie && document.cookie !== '') {
@@ -17,16 +18,25 @@ export async function getCsrfToken() {
           if (cookie.substring(0, name.length + 1) === (name + '=')) {
               cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
               break;
-          } else {
-            // In order to have the CSRF token cookie available, I need to call a GET API
-            // TODO: Use another endpoint
-            await fetch(`${import.meta.env.VITE_BASE_API_URL}/api/csrf/`, {credentials: "include"});
-            cookieValue = getCsrfToken();
           }
       }
   }
+
   return cookieValue;
 }
+
+
+export async function getCsrfToken() {
+  let cookieValue = readCsrfToken();
+
+  if (cookieValue === null) {
+    await fetch(`${import.meta.env.VITE_BASE_API_URL}/api/csrf/`, {credentials: "include"});
+    cookieValue = readCsrfToken();
+  }
+
+  return cookieValue;
+}
+
 
 export async function sendHttpReq(method, url, params, contentType = 'application/json') {
   let headers = {
