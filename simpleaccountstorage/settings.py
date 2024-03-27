@@ -206,6 +206,7 @@ REST_REGISTRATION = {
     'VERIFICATION_FROM_EMAIL': config.get('VERIFICATION_FROM_EMAIL', 'no-reply@example.com'),
 
     'REGISTER_VERIFICATION_EMAIL_TEMPLATES': {
+        'subject': 'registration/registration-subject.txt',
         'body': 'registration/registration-message.txt',
     },
 }
