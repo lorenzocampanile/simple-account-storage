@@ -1,6 +1,6 @@
 Thank you for registering to Simple Account Storage.
+If you haven't requested the registration, please ignore this e-mail.
+
 Please verify your account by clicking on this link:
 
 {{ verification_url | safe }}
-
-If you haven't requested the registration, please ignore this e-mail.
