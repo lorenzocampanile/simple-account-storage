@@ -20,7 +20,7 @@ const accountPassword = ref('');
 const accountNotes = ref('');
 const accountType = ref('');
 const accountWebLink = ref('');
-const accountSshLink = ref('');
+const accountSshHost = ref('');
 const accountDatabaseHost = ref('');
 const accountDatabaseType = ref('');
 
@@ -47,7 +47,7 @@ onMounted(async () => {
     accountNotes.value = accountData.notes;
     accountType.value = accountData.type;
     accountWebLink.value = accountData.web ? accountData.web.link : null;
-    accountSshLink.value = accountData.ssh ? accountData.ssh.link : null;
+    accountSshHost.value = accountData.ssh ? accountData.ssh.host : null;
     accountDatabaseHost.value = accountData.database ? accountData.database.host : null;
     accountDatabaseType.value = accountData.database ? accountData.database.type : null;
   }
@@ -70,7 +70,7 @@ async function saveAccount(event) {
       accountPayload['web'] = {'link': accountWebLink.value};
       break;
     case ACCOUNT_TYPES.SSH_SERVER:
-      accountPayload['ssh'] = {'link': accountSshLink.value};
+      accountPayload['ssh'] = {'host': accountSshHost.value};
       break;
     case ACCOUNT_TYPES.DATABASE:
       accountPayload['database'] = {'host': accountDatabaseHost.value, 'type': accountDatabaseType.value};
@@ -214,8 +214,8 @@ async function deleteAccount() {
                         <span class="info ml-1 text-danger" v-if="fieldErrorMessages.web && fieldErrorMessages.web.link">{{ fieldErrorMessages.web.link.join(',') }}</span>
                       </div>
                       <div class="col-12" v-if="accountType === 'ssh'">
-                        <input v-model="accountSshLink" type="text" placeholder="SSH Link (e.g. ssh user@88.88.88.88)" />
-                        <span class="info ml-1 text-danger" v-if="fieldErrorMessages.ssh && fieldErrorMessages.ssh.link">{{ fieldErrorMessages.ssh.link.join(',') }}</span>
+                        <input v-model="accountSshHost" type="text" placeholder="SSH Server Host (e.g. 88.88.88.88)" />
+                        <span class="info ml-1 text-danger" v-if="fieldErrorMessages.ssh && fieldErrorMessages.ssh.host">{{ fieldErrorMessages.ssh.host.join(',') }}</span>
                       </div>
                       <div class="col-12" v-if="accountType === 'database'">
                         <input v-model="accountDatabaseHost" type="text" placeholder="Database host (e.g. 88.88.88.88)" />

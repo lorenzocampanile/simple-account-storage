@@ -69,7 +69,7 @@ class SSHAccount(models.Model):
         primary_key=True,
         related_name='ssh'
     )
-    link = models.CharField(max_length=LINK_MAX_LENGHT)
+    host = models.CharField(max_length=LINK_MAX_LENGHT)
 
 
 class DatabaseAccount(models.Model):

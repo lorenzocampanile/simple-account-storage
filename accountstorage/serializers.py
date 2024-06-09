@@ -16,13 +16,13 @@ class WebAccountSerializer(serializers.ModelSerializer):
 class SSHAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = SSHAccount
-        fields = ['link', ]
+        fields = ['host', ]
 
 
 class DatabaseAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = DatabaseAccount
-        fields = ['host', 'type',]
+        fields = ['host', 'type', ]
 
 
 class AccountSerializer(serializers.ModelSerializer):

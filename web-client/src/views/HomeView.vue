@@ -17,7 +17,7 @@ let pageCount = ref(1);
 onMounted(async () => {
   let accountsResponse = await sendHttpReq('GET', `/api/v1/accounts/`, {'page': currentPage});
   let accountsResponseData = await accountsResponse.json();
-  accounts.value = accountsResponseData['results'];
+  accounts.value = enrichAccountsResponseData(accountsResponseData['results']);
 
   previousPageLink.value = accountsResponseData['previous'];
   nextPageLink.value = accountsResponseData['next'];
@@ -27,6 +27,18 @@ onMounted(async () => {
     pageCount.value = accountsResponseData['count'] / 10;
   }
 });
+
+// Enrich the accounts response data by adding some additional fields
+let enrichAccountsResponseData = function(accountsResponseData) {
+  for (let account of accountsResponseData) {
+    // Add SSH link
+    if ('ssh' in account) {
+      account['ssh']['link'] = `ssh ${account['username']}@${account['ssh']['host']}`;
+    }
+  }
+
+  return accountsResponseData;
+}
 
 let getIconStlyeFromAccount = (account) => {
   const ACCOUNT_TYPE_ICON_MAP = {
@@ -48,6 +60,7 @@ let copiedRefs = ref({
   passwords: [],
   webLinks: [],
   sshLinks: [],
+  sshHosts: [],
   databaseHosts: [],
 });
 
@@ -68,6 +81,7 @@ let copyAccountPropertyToClipboard = (account, propName) => {
     'username': 'usernames',
     'web.link': 'webLinks',
     'ssh.link': 'sshLinks',
+    'ssh.host': 'sshHosts',
     'db.host': 'databaseHosts',
   };
 
@@ -121,6 +135,7 @@ let copyPasswordToClipboard = async (account) => {
                 <button class="data-copy-btn btn bg-green-400 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'usernames')" @click="copyAccountPropertyToClipboard(account, 'username')">Copy username</button>
                 <button class="data-copy-btn btn bg-gray-600 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'passwords')" @click="copyPasswordToClipboard(account)">Copy password</button>
                 <button v-if="account.type === 'web'" class="data-copy-btn btn btn-link tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'webLinks')" @click="copyAccountPropertyToClipboard(account, 'web.link')">Copy web link</button>
+                <button v-if="account.type === 'ssh'" class="data-copy-btn btn bg-teal-600 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'sshHosts')" @click="copyAccountPropertyToClipboard(account, 'ssh.host')">Copy SSH host</button>
                 <button v-if="account.type === 'ssh'" class="data-copy-btn btn bg-indigo-600 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'sshLinks')" @click="copyAccountPropertyToClipboard(account, 'ssh.link')">Copy SSH link</button>
                 <button v-if="account.type === 'database'" class="data-copy-btn btn bg-teal-600 text-white tooltip" :data-tooltip="getCopyButtonTooltipText(account, 'databaseHosts')" @click="copyAccountPropertyToClipboard(account, 'db.host')">Copy database host</button>
                 <small class="text-gray-500">Created at: {{ account.created_at }}</small>
