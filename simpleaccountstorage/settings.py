@@ -246,7 +246,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': config.get('LOG_FILENAME', '/var/log/simple-account-storage/error.log'),
+            'filename': config.get('LOG_FILENAME', './error.log'),
             'formatter': 'verbose'
         },
     },
@@ -271,6 +271,7 @@ if DEBUG:
     CORS_ALLOW_CREDENTIALS = True
     CORS_ALLOWED_ORIGINS = [
         'http://127.0.0.1:5173',
+        'http://localhost:5173',
     ]
     CORS_ALLOW_HEADERS = (
         "accept",
