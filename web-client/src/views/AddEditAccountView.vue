@@ -210,11 +210,11 @@ async function deleteAccount() {
                         <span class="info ml-1 text-danger" v-if="fieldErrorMessages.type">{{ fieldErrorMessages.type.join(',') }}</span>
                       </div>
                       <div class="col-12" v-if="accountType === 'web'">
-                        <input v-model="accountWebLink" type="text" placeholder="Web link (e.g. www.facebook.com/login)" />
+                        <input v-model="accountWebLink" type="text" placeholder="Web link (e.g. https://www.facebook.com/login)" />
                         <span class="info ml-1 text-danger" v-if="fieldErrorMessages.web && fieldErrorMessages.web.link">{{ fieldErrorMessages.web.link.join(',') }}</span>
                       </div>
                       <div class="col-12" v-if="accountType === 'ssh'">
-                        <input v-model="accountSshLink" type="text" placeholder="SSH Link (e.g. user@88.88.88.88)" />
+                        <input v-model="accountSshLink" type="text" placeholder="SSH Link (e.g. ssh user@88.88.88.88)" />
                         <span class="info ml-1 text-danger" v-if="fieldErrorMessages.ssh && fieldErrorMessages.ssh.link">{{ fieldErrorMessages.ssh.link.join(',') }}</span>
                       </div>
                       <div class="col-12" v-if="accountType === 'database'">
