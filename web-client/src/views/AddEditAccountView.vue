@@ -185,13 +185,13 @@ async function deleteAccount() {
                         <span class="info ml-1 text-danger" v-if="fieldErrorMessages.label">{{ fieldErrorMessages.label.join(',') }}</span>
                       </div>
                       <div class="col-12">
-                        <input v-model="accountUsername" type="text" placeholder="Username" />
+                        <input v-model="accountUsername" type="text" placeholder="Username" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" />
                         <span class="info ml-1 text-danger" v-if="fieldErrorMessages.username">{{ fieldErrorMessages.username.join(',') }}</span>
                       </div>
                       <div class="col-12 row">
                         <div class="col-10 p-0">
-                          <input v-if="showPassword" v-model="accountPassword" type="text" placeholder="Password" />
-                          <input v-else v-model="accountPassword" type="password" placeholder="Password" />
+                          <input v-if="showPassword" v-model="accountPassword" type="text" placeholder="Password" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" />
+                          <input v-else v-model="accountPassword" type="password" placeholder="Password" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" />
                           <span class="info ml-1 text-danger" v-if="fieldErrorMessages.password">{{ fieldErrorMessages.password.join(',') }}</span>
                         </div>
                         <div class="col-1 ml-1"><button @click.prevent="showPassword = !showPassword">Show</button></div>
