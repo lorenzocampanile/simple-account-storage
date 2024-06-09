@@ -1,11 +1,14 @@
 <script setup>
 import { sendHttpReq } from '@/composables/httpreq';
 import router from '@/router';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch, reactive } from 'vue';
 import HomePaginator from '@/components/HomePaginator.vue';
+import debounce from 'lodash.debounce'
 
 const QUERY_STRING = window.location.search;
 const URL_PARAMS = new URLSearchParams(QUERY_STRING);
+const DEBOUNCE_MS = 300;
+
 let currentPage = parseInt(URL_PARAMS.get('page') ?? 1);
 
 let accounts = ref([]);
@@ -13,9 +16,30 @@ let previousPageLink = ref(null);
 let nextPageLink = ref(null);
 let pageCount = ref(1);
 
-// Fetch the user's Account(s)
+let formFilters = reactive({
+  type: '',
+  textSearch: '',
+});
+
+
 onMounted(async () => {
-  let accountsResponse = await sendHttpReq('GET', `/api/v1/accounts/`, {'page': currentPage});
+  await fetchAccountsData();
+});
+
+watch(formFilters, async (_, __) => {
+  debounce(async () => {
+    await fetchAccountsData();
+  }, DEBOUNCE_MS)();
+})
+
+
+// Fetch the user's Account(s)
+let fetchAccountsData = async function() {
+  let params = {'page': currentPage};
+  if (formFilters.type) params['type'] = formFilters.type
+  if (formFilters.textSearch) params['search'] = formFilters.textSearch
+
+  let accountsResponse = await sendHttpReq('GET', `/api/v1/accounts/`, params);
   let accountsResponseData = await accountsResponse.json();
   accounts.value = enrichAccountsResponseData(accountsResponseData['results']);
 
@@ -26,7 +50,7 @@ onMounted(async () => {
   if (accountsResponseData['count'] % 10 === 0) {
     pageCount.value = accountsResponseData['count'] / 10;
   }
-});
+}
 
 // Enrich the accounts response data by adding some additional fields
 let enrichAccountsResponseData = function(accountsResponseData) {
@@ -120,6 +144,22 @@ let copyPasswordToClipboard = async (account) => {
       <div class="content">
         <div class="p-4">
           <h3>Accounts list</h3>
+          <div class="card">
+            <div class="row">
+              <div class="col-3">
+                <select v-model="formFilters.type" class="select">
+                  <option value="">All accounts types</option>
+                  <option value="web">Web</option>
+                  <option value="ssh">SSH</option>
+                  <option value="database">Database</option>
+                </select>
+              </div>
+              <div class="col-3">
+                <input v-model="formFilters.textSearch" type="text" placeholder="Search by text" />
+              </div>
+            </div>
+          </div>
+          <div class="divider mt-4"></div>
           <div v-if="accounts.length > 0">
             <HomePaginator :pageCount="pageCount" :currentPage="currentPage" :previousPageLink="previousPageLink" :nextPageLink="nextPageLink" styleClasses="mb-2" />
             <div v-for="account in accounts" class="card">

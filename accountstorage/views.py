@@ -1,14 +1,14 @@
 from typing import Any
 
-from django.db.models.query import QuerySet
+from django.db.models.query import QuerySet, Q
 from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from accountstorage.encrypt import decrypt_password
 
+from accountstorage.encrypt import decrypt_password
 from accountstorage.models import Account
 from .serializers import AccountSerializer
 
@@ -32,9 +32,11 @@ class AccountViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, ]
 
     def get_queryset(self) -> QuerySet[Any]:
-        return Account.objects.prefetch_related('web', 'ssh', 'db')\
-                              .filter(user=self.request.user)\
-                              .order_by('label')
+        base_query = Account.objects.prefetch_related('web', 'ssh', 'db')\
+                                    .filter(user=self.request.user)\
+                                    .order_by('label')
+
+        return self._apply_query_filters(qs=base_query)
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -48,3 +50,20 @@ class AccountViewSet(viewsets.ModelViewSet):
             response_data['password'] = plain_text_password
 
         return Response(response_data)
+
+    def _apply_query_filters(self, qs: QuerySet[Account]) -> QuerySet[Account]:
+        if account_type := self.request.GET.get('type'):
+            qs = qs.filter(type=account_type)
+
+        if search_text := self.request.GET.get('search'):
+            qs = qs.filter(
+               Q(label__icontains=search_text) |
+               Q(username__icontains=search_text) |
+               Q(notes__icontains=search_text) |
+               Q(web__link__icontains=search_text) |
+               Q(ssh__host__icontains=search_text) |
+               Q(db__host__icontains=search_text) |
+               Q(db__type__icontains=search_text)
+            )
+
+        return qs
