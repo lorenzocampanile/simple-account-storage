@@ -24,7 +24,7 @@
 </script>
 
 <template>
-  <div class="bg-gray-100 u-center" style="height: 500px;">
+  <div class="bg-white-100 u-center" style="height: 500px;">
     <p v-if="verificationError">We can't verify your e-mail, <RouterLink to="/signup">try again 😢</RouterLink></p>
     <p v-else-if="loadingVerification">We are verifing your e-mail...</p>
     <p v-else>E-Mail verified successfully 🥳🥳 <RouterLink to="/login">Go to login page</RouterLink></p>
