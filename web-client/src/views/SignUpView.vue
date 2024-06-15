@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { login } from '@/composables/login';
 import { STATUS_CODES, sendHttpReq } from '@/composables/httpreq';
 import router from '@/router';
+import CryptoJS from 'crypto-js';
 
 const username = ref('');
 const password = ref('');
@@ -12,10 +13,14 @@ const signUpFieldErrors = ref({});
 const successMessage = ref('');
 
 async function performSignUp(event) {
+  let [ publicKey, encryptedPrivateKey ] = await generateKeysPair(password.value);
+
   let accountResponse = await sendHttpReq('POST', '/api/v1/auth/register/', {
     "email": username.value,
     "password": password.value,
     "password_confirm": passwordConfirm.value,
+    "public_key": publicKey,
+    "encrypted_private_key": encryptedPrivateKey,
   })
 
   function cleanForm() {
@@ -44,6 +49,32 @@ async function performSignUp(event) {
       signUpFieldErrors.value = accountResponseData;
       signUpError.value = accountResponseData.non_field_errors.join(', ');
   }
+}
+
+// Generate the public/private key pair, which will be used for enrcypting
+// and decrypting the passwords of this account.
+//
+// Returns both:
+// - decoded version of the public key
+// - decoded and encrypted (using passphrase) version of the private key
+let generateKeysPair = async function(passphrase) {
+  const { publicKey, privateKey } = await window.crypto.subtle.generateKey(
+    {
+      name: "RSA-OAEP",
+      modulusLength: 2048,
+      publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+      hash: { name: "SHA-256" },
+    },
+    true,
+    ["encrypt", "decrypt"]
+  );
+
+  let exportedPrivateKey = JSON.stringify(await window.crypto.subtle.exportKey("jwk", privateKey));
+  let encryptedPrivateKey = CryptoJS.AES.encrypt(exportedPrivateKey, passphrase).toString();
+
+  let exportedPublicKey = JSON.stringify(await window.crypto.subtle.exportKey("jwk", publicKey));
+
+  return [ exportedPublicKey, encryptedPrivateKey ];
 }
 </script>
 

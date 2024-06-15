@@ -32,11 +32,18 @@ urlpatterns = [
 
     # Authentication endpoints
     path('api/v1/auth/', include('rest_registration.api.urls')),
+    path('api/v1/auth/', include('authentication.urls')),
 
     # Accounts CRUD APIs
     path('api/v1/accounts/', include('accountstorage.urls')),
 ]
 
+# If DEBUG is True, add also the authentication endpoints provided
+# by Django REST Framework
+if settings.DEBUG:
+    urlpatterns += [
+        path('drf-auth/', include('rest_framework.urls')),
+    ]
 
 # If DEBUG is False, serve also the SPA static files.
 #

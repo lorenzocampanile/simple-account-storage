@@ -74,6 +74,17 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(_("email address"), unique=True)
 
+    # Keys for asymmetric cryptography.
+    #
+    # IMPORTANT NOTE: The private key is encrypted on the client, using
+    # the owner master password, before being saved here.
+    #
+    # After the login, the user can obtain the encrypted version of his private
+    # key and decrypt it using his master password. After this, he will be able
+    # to decrypt all his passwords directly on the client.
+    public_key = models.TextField()
+    encrypted_private_key = models.TextField()
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
