@@ -1,6 +1,5 @@
 export default function authenticated({ next, router }) {
-  console.log('** ehi', !sessionStorage.getItem('encryptionKey'));
-  if (!sessionStorage.getItem('encryptionKey')) {
+  if (!sessionStorage.getItem('privateKey')) {
     return router.push({ name: 'login' });
   }
 

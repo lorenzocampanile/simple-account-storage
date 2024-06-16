@@ -6,7 +6,7 @@ import VerifyView from '../views/VerifyView.vue'
 import AddEditAccountView from '@/views/AddEditAccountView.vue'
 
 let requireLoginBeforeEnter = (to, from) => {
-  if (!sessionStorage.getItem('encryptionKey')) {
+  if (!sessionStorage.getItem('privateKey')) {
     return router.push({ name: 'login' });
   }
 };
