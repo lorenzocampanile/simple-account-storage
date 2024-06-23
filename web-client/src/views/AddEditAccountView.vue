@@ -3,6 +3,8 @@ import { STATUS_CODES, sendHttpReq } from '@/composables/httpreq';
 import router from '@/router';
 import { onMounted, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
+import { encryptPassword, decryptPassword } from '@/composables/encryptor';
+
 
 const ACCOUNT_TYPES = {
   WEB_PORTAL: 'web',
@@ -43,23 +45,28 @@ onMounted(async () => {
     let accountData = await accountResponse.json();
     accountLabel.value = accountData.label;
     accountUsername.value = accountData.label;
-    accountPassword.value = accountData.password;
     accountNotes.value = accountData.notes;
     accountType.value = accountData.type;
     accountWebLink.value = accountData.web ? accountData.web.link : null;
     accountSshHost.value = accountData.ssh ? accountData.ssh.host : null;
     accountDatabaseHost.value = accountData.database ? accountData.database.host : null;
     accountDatabaseType.value = accountData.database ? accountData.database.type : null;
+
+    // Decrypt the password
+    let decryptedPassword = await decryptPassword(accountData.password);
+    accountPassword.value = decryptedPassword;
   }
 });
 
-
 async function saveAccount(event) {
+  // Encrypt the password
+  let b64EncryptedPassword = await encryptPassword(accountPassword.value);
+
   // Define the base payload
   let accountPayload = {
     label: accountLabel.value,
     username: accountUsername.value,
-    password: accountPassword.value,
+    password: b64EncryptedPassword,
     notes: accountNotes.value,
     type: accountType.value,
   };

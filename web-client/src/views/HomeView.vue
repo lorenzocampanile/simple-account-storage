@@ -4,6 +4,7 @@ import router from '@/router';
 import { onMounted, ref, watch, reactive } from 'vue';
 import HomePaginator from '@/components/HomePaginator.vue';
 import debounce from 'lodash.debounce'
+import { decryptPassword } from '@/composables/encryptor';
 
 const QUERY_STRING = window.location.search;
 const URL_PARAMS = new URLSearchParams(QUERY_STRING);
@@ -56,7 +57,7 @@ let fetchAccountsData = async function() {
 let enrichAccountsResponseData = function(accountsResponseData) {
   for (let account of accountsResponseData) {
     // Add SSH link
-    if ('ssh' in account) {
+    if (account['ssh']) {
       account['ssh']['link'] = `ssh ${account['username']}@${account['ssh']['host']}`;
     }
   }
@@ -129,7 +130,9 @@ let copyPasswordToClipboard = async (account) => {
   let accountResponseData = await accountResponse.json();
   copiedRefs.value.loadingPasswords.pop(account.id);
 
-  navigator.clipboard.writeText(accountResponseData['password']);
+  let plainTextPassword = await decryptPassword(accountResponseData['password']);
+  navigator.clipboard.writeText(plainTextPassword);
+
   copiedRefs.value.passwords.push(account.id);
   setTimeout(() => {
     copiedRefs.value.passwords.pop(account.id);

@@ -38,19 +38,6 @@ class AccountViewSet(viewsets.ModelViewSet):
 
         return self._apply_query_filters(qs=base_query)
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        response_data = serializer.data
-
-        # Decode the password using the encryption key
-        encryption_key = request.META.get('HTTP_X_ENCRYPTION_KEY')
-        if encryption_key:
-            plain_text_password = decrypt_password(instance.password, encryption_key)
-            response_data['password'] = plain_text_password
-
-        return Response(response_data)
-
     def _apply_query_filters(self, qs: QuerySet[Account]) -> QuerySet[Account]:
         if account_type := self.request.GET.get('type'):
             qs = qs.filter(type=account_type)

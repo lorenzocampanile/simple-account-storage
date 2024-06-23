@@ -42,20 +42,11 @@ class AccountSerializer(serializers.ModelSerializer):
             'id', 'label', 'username', 'password', 'notes', 'type',
             'created_at', 'updated_at', 'web', 'ssh', 'db',
         ]
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
 
     def create(self, validated_data):
         # Extract the specific type account data (e.g. link of a web portal)
         account_type = validated_data['type']
         type_data = validated_data.pop(account_type)
-
-        # Extract the encryption key and encrypt the password
-        encryption_key = self.context['request'].META['HTTP_X_ENCRYPTION_KEY']
-        plain_text_password = validated_data.pop('password')
-        encrypted_password = encrypt_password(plain_text_password, encryption_key)
-        validated_data['password'] = encrypted_password
 
         # Create the base account record
         authenticated_user = self.context['request'].user
@@ -84,13 +75,6 @@ class AccountSerializer(serializers.ModelSerializer):
             # Just update the specific type record
             instance_specific_type.__dict__.update(**type_data)
             instance_specific_type.save()
-
-        # If a new password has been specified, encrypt and save the new password
-        new_password = validated_data.pop('password', '')
-        if new_password:
-            encryption_key = self.context['request'].META['HTTP_X_ENCRYPTION_KEY']
-            encrypted_password = encrypt_password(new_password, encryption_key)
-            instance.password = encrypted_password
 
         # Update the other instance properties
         instance.__dict__.update(**validated_data)
